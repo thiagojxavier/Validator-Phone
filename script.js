@@ -1,5 +1,5 @@
 const inputUser = document.getElementById('user-input');
-const checkBtn = document.getElementById('check-btn');
+const form = document.getElementById('form');
 const clearBtn = document.getElementById('clear-btn');
 const result = document.getElementById('results-div');
 
@@ -15,15 +15,19 @@ const regexPatternWithParenthesesAndDashes = /^\([0-9][0-9][0-9]\)[0-9][0-9][0-9
 
 const regexPatternWithSpaces = /^1\s[0-9][0-9][0-9]\s[0-9][0-9][0-9]\s[0-9][0-9][0-9][0-9]$/;
 
-const regexPatternwithParenthesesAndDashesWithoutSpaces = /^[1]\([0-9][0-9][0-9]\)[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$/
+const regexPatternWithParenthesesAndDashesWithoutSpaces = /^[1]\([0-9][0-9][0-9]\)[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$/;
 
 const denyList = [regexPatternWithSpacesAndDashes, regexPatternWithSpacesAndParentheses,
 regexPatternWithoutSpacesDashesAndParentheses,
 regexPatternWithDashes, regexPatternWithParenthesesAndDashes, regexPatternWithSpaces,
-regexPatternwithParenthesesAndDashesWithoutSpaces];
+regexPatternWithParenthesesAndDashesWithoutSpaces];
 
-const handleInputUser = () => {
+inputUser.focus();
+
+const handleInputUser = (event) => {
+  event.preventDefault();
   result.classList.remove('active');
+  result.textContent = "";
 
   if (inputUser.value === "") {
     alert('Please provide a phone number')
@@ -32,18 +36,21 @@ const handleInputUser = () => {
 
   const resultMatchRegex = checkStringMatchesRegex(inputUser.value);
 
-  console.log(resultMatchRegex)
-
   if(resultMatchRegex) {
-    result.classList.add('active');
+    setTimeout(() => {
+      addClassActive();
+    }, 50);
     result.textContent += `Valid US number: ${inputUser.value}`
+    inputUser.value = "";
     return
   }
 
   if(!resultMatchRegex) {
-    result.classList.add('active');
+    setTimeout(() => {
+      addClassActive();
+    }, 50);
     result.textContent += `Invalid US number: ${inputUser.value}`
-    return
+    inputUser.value = "";
   }
 
 }
@@ -58,5 +65,9 @@ const clearDivResult = () => {
   result.classList.remove('active');
 }
 
-checkBtn.addEventListener('click', handleInputUser);
+const addClassActive = () => {
+  result.classList.add('active');
+}
+
+form.addEventListener('submit', handleInputUser);
 clearBtn.addEventListener('click', clearDivResult);
